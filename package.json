@@ -1,0 +1,32 @@
+{
+  "name": "udacity_weatherjournal",
+  "version": "1.0.0",
+  "description": "simple app for udacity weather journal project ",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TarekFawaz/udacity_WeatherJournal.git"
+  },
+  "keywords": [
+    "udacity",
+    "web",
+    "profissional",
+    "async",
+    "APIs"
+  ],
+  "author": "Tarek Fawaz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TarekFawaz/udacity_WeatherJournal/issues"
+  },
+  "homepage": "https://github.com/TarekFawaz/udacity_WeatherJournal#readme"
+}
