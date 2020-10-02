@@ -18,10 +18,14 @@ also use promise chain
 ## Development
 
 > - Used NodeJS environment 
-> - Set up install and configure Express JS
+> - Set up install and configure Express JS 
+`const express = require('express'); `
+`const app = express(); `
 > - using bodey-parser as middleware
 > - using Cors module to get over the XSS issues 
-> - using Sass for compiling scss styles  
+> - using Sass for compiling scss styles 
+`npm install sass `
+`sass style.scss style.css `  
 
 ---
 
@@ -47,6 +51,7 @@ also use promise chain
 > - Safari 
 > *and you could expolre more*
 ---
+> still need to work on persisting the Data into Data store 
 > please help me by sending me comments regarding the coding style or missing best practices by sending me e-mail to [tarek.fawaz1983@gmail.com](mailto:tarek.fawaz1983@gmail.com) 
 or update on this repo ;)
 
