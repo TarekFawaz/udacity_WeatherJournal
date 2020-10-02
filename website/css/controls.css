@@ -11,8 +11,26 @@
   }
  
   
+  #ProjectDataContainer{
+    width: 50%;
+    min-height: 300px;
+    max-height: 70%;
+    overflow: scroll;
+    box-shadow: 9px 7px 40px -6px rgba(0, 0, 0, 0.35);
+    background:white;
+  
+}
+
+.modelink{
+    font-weight: 300;
+    font-style: italic;
+    font-size: 22px;
+
+}
+
+
 #controls{
-    width: 15%;
+    width: 25%;
     box-shadow: 9px 7px 40px -6px rgba(0, 0, 0, 0.35);
     background:linear-gradient(120deg, rgba(255, 155, 155, 0.25) 50%, rgba(255, 255, 255, 0) 100%);
   

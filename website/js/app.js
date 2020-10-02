@@ -8,18 +8,31 @@
 // global variables 
 const baseURL='http://api.openweathermap.org/data/2.5/weather';
 const apiKey='2dc80598a00a7d91b9cc7fa15b44a39e';
-
+const todayDate=new Date();
 
 
 // init fucntion to initailize all the elements at the application start
 function init(){
 
 const dateElement=document.getElementById('date');
-const todayDate=new Date();
+
 dateElement.innerText=todayDate.toDateString();
+
+// Load Project Data if any 
+// in Case user refershed the browser and there are some Data in the server
+getCurrentProjectData('/list').then(function(projectData){
+    console.log(projectData);// for training project purposes 
+    listProjectData(projectData);
+});
+
+// add generate button event listenr 
+const generateButtonElement=document.getElementById('generate');
+generateButtonElement.addEventListener('click',generate);
+
+
 }
 
-// API Calls Here 
+// openweatherMap API Get Request  
 const getCurrentWeatherData = async(zipcode)=>{
     
     const requestUrl=` ${baseURL}?appid=${apiKey}&zip=${zipcode}&units=metric `;
@@ -34,6 +47,40 @@ const getCurrentWeatherData = async(zipcode)=>{
     }
 
 };
+
+//Local server Get Project Data Request 
+const getCurrentProjectData = async(url)=>{
+    const response= await fetch(url);
+    try{
+         return await response.json();
+    }
+    catch(error){
+        console.error(error);
+    }
+};
+
+// Local server Post Data request 
+const postCurrentProjectData = async(url,data)=>{
+    const response= await fetch(url,{
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'content-type': 'application/json',
+        },
+        // body data must match contet type header
+        body: JSON.stringify(data),
+
+    });
+    try{
+         return await response.json();
+    }
+    catch(error){
+        console.error(error);
+    }
+};
+
+
+// This Comment is just guide while I', coding
 /* expected Response is 
 {"coord":{"lon":-122.09,"lat":37.39},
 "weather":[{"id":711,"main":"Smoke","description":"smoke","icon":"50d"}]
@@ -47,46 +94,39 @@ const getCurrentWeatherData = async(zipcode)=>{
 
 // Generate function is the event handler function for the button click -- binded through HTML OnClick 
 function  generate(){
-    const zipCode = document.getElementById('zipCode').value;
+    const zipCode = document.getElementById('zipCode').value.trim();
     const feeling=document.getElementById('feeling').value;
     const tempElement=document.getElementById('temp');
-    let WeatherMode=weather[0];
+    const feelsLikeElement=document.getElementById('feelsLike');
+    const cityLikeElement=document.getElementById('city');
+   
       getCurrentWeatherData(zipCode) .then(function(data){
     
-            console.log(data);    
-            const weatherPart=data.weather[0];
+            console.log(data);  
+            if(data.cod==200){ // Make sure that API return with Valid Data
+                const weatherPart=data.weather[0];
             const mainTempPart=data.main;
             console.log(weatherPart.main);
-            switch(weatherPart.main.toLowerCase())
+                         
+            tempElement.innerHTML=` ${Math.round(mainTempPart.temp)} <span> C </span>`;
+            feelsLikeElement.innerText=`feels like: ${mainTempPart.feels_like} C`;
+            cityLikeElement.innerText=`${data.name} - ${data.sys.country}`;
+            
+            changeWeatherWrapper(weatherPart.main);
+            postCurrentProjectData('/addWeatherData',{temp:Math.round(mainTempPart.temp),date:todayDate.toDateString(),userResponse:feeling,mode:weatherPart.main}).then(function(postData){
+                console.log(postData);// for training project purposes 
+                getCurrentProjectData('/list').then(function(projectData){
+                    console.log(projectData);// for training project purposes 
+                    listProjectData(projectData);
+                });
+            });  
+
+            }  
+            else
             {
-                case 'clear':
-                    WeatherMode=weather[4];
-                    break;
-                case 'smoke':
-                    WeatherMode=weather[1];
-                    break;
-                case 'rain':
-                    WeatherMode=weather[2];
-                    break;    
-                case 'snow':
-                    WeatherMode=weather[0];
-                    break;
-                case 'clouds':
-                {
-                    WeatherMode=weather[1];
-                    break;
-                }
-                default:
-                    WeatherMode=weather[4];
-                    break;
-    
+                alert(data.message); // Alert is bad parctice , but I will keep it as it during training 
             }
-           
-        
-            tempElement.innerHTML=` ${Math.round(mainTempPart.temp)} <span> C </span> <br> <span style='Font-size:24px;'>feels like: ${mainTempPart.feels_like} C</span>`;
-            WeatherMode.name=weatherPart.main;
-            changeWeather(WeatherMode);
-    
+            
         
 
       });
@@ -96,5 +136,28 @@ function  generate(){
     
 
 }
+
+// Helper Method to format the historical project data 
+function listProjectData(projectData){
+    const itemElement=document.getElementById('items');
+    itemElement.innerHTML='';
+    projectData.slice().reverse().forEach(element => { // using reverse order to display recent elements at the top (as we use Push)-- Could handled in server side code using .unshift()
+        itemElement.innerHTML+=` <b>Temp</b> <I>${element.temp}</I> --  <b>Date</b> <I>${element.date}</I> -- <b>User Resposne</b> <I>${element.userResponse}</I> 
+        -- <b>Mode</b> <a href='#' class='modelink'>${element.mode}</a> <-- <I>you may click here to know weather mode</I> <hr><br> `;
+    });
+    const modesLinks=document.querySelectorAll('.modelink');
+    modesLinks.forEach(modeLink=>{
+        modeLink.addEventListener('click',(e)=>{
+            e.preventDefault();
+            changeWeatherWrapper(modeLink.innerText.trim().toLowerCase());
+
+        }); 
+
+    });
+
+}
+
+
+
 
 init();

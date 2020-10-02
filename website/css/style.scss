@@ -35,14 +35,14 @@ body
 .container
 {
     display: flex;
-	flex-direction: column;
+	flex-direction: row;
     align-items: center;
   	justify-content: center;
 	margin: 0;
 	padding: 0;
 	height: 100%;
 	width: 100%;
-	overflow: auto;
+	overflow: scroll;
 	position: relative;
 	
 	background: #eee;
@@ -138,6 +138,27 @@ nav
 		{
 			font-weight: 600;
 			font-size: 22px;
+		}
+
+		#feelsLike
+		{
+			float: left;
+			font-weight: 300;
+			font-size: 18px;
+			position: relative;
+			margin-top: 250px;
+			left: -50px;
+		}
+		#city
+		{
+			float: right;
+			font-weight: 300;
+			font-size: 18px;
+			position: relative;
+			margin-top: -22px;
+			right: 15px;
+			text-align: right;
+			width: 50%;
 		}
 
 		.temp

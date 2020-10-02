@@ -56,7 +56,10 @@ var weather = [
 	{ type: 'wind', name: 'Windy'}, 
 	{ type: 'rain', name: 'Rain'}, 
 	{ type: 'thunder', name: 'Storms'},
-	{ type: 'sun', name: 'Sunny'}
+    { type: 'sun', name: 'Sunny'},
+    {type:'clouds', name: 'Clouds' },
+    {type:'smoke', name:'Smoke'},
+    {type:'clear',name:'Clear'}
 ];
 
 // 🛠 app settings
@@ -117,7 +120,7 @@ function init()
 	// ☀️ set initial weather
 	
 	TweenMax.set(sunburst.node, {opacity: 0})
-	changeWeather(weather[0]);
+	changeWeather(weather[7]);
 }
 
 function onResize()
@@ -452,8 +455,9 @@ function tick()
 	}
 	
 	for(var i = 0; i < clouds.length; i++)
-	{		
-		if(currentWeather.type == 'sun')
+	{	
+      
+		if(currentWeather.type == 'sun' || currentWeather.type == 'clear')
 		{
 			if(clouds[i].offset > -(sizes.card.width * 1.5)) clouds[i].offset += settings.windSpeed / (i + 1);
 			if(clouds[i].offset > sizes.card.width * 2.5) clouds[i].offset = -(sizes.card.width * 1.5);
@@ -520,6 +524,49 @@ function lightning()
 	TweenMax.to(strike.node, 1, {opacity: 0, ease:Power4.easeOut, onComplete: function(){ strike.remove(); strike = null}})
 }
 
+function changeWeatherWrapper(weatherTypefromAPI)
+{
+    let WeatherMode=weather[7];
+    switch(weatherTypefromAPI.toLowerCase())
+    {
+        case 'windy':
+            WeatherMode=weather[1];
+            break;
+        case 'sunny':
+            WeatherMode=weather[4];
+            break;
+        case 'clear':
+            WeatherMode=weather[7];
+            break;
+        case 'thunder':
+            WeatherMode=weather[3];
+            break;
+        case 'storm':
+            WeatherMode=weather[3];
+            break;
+        case 'smoke':
+            WeatherMode=weather[6];
+            break;
+        case 'rain':
+            WeatherMode=weather[2];
+            break;    
+        case 'snow':
+            WeatherMode=weather[0];
+            break;
+        case 'clouds':
+        {
+            WeatherMode=weather[5];
+            break;
+        }
+        default:
+            WeatherMode=weather[7];
+            break;
+
+    }
+    changeWeather(WeatherMode);
+}
+
+
 function changeWeather(weather)
 {
 	if(weather.data) weather = weather.data;
@@ -537,12 +584,21 @@ function changeWeather(weather)
 	
 	switch(weather.type)
 	{
-		case 'wind':
+        case 'smoke': // Added By Me
+            TweenMax.to(settings, 3, {windSpeed: 0.5, ease: Power2.easeOut});
+			break;
+        case 'clouds': // Added By Me
+            TweenMax.to(settings, 3, {windSpeed: 3, ease: Power2.easeInOut});
+			break;
+        case 'wind':
 			TweenMax.to(settings, 3, {windSpeed: 3, ease: Power2.easeInOut});
 			break;
 		case 'sun':
 			TweenMax.to(settings, 3, {windSpeed: 20, ease: Power2.easeInOut});
-			break;
+            break;
+        case 'clear': //added By me
+            TweenMax.to(settings, 3, {windSpeed: 20, ease: Power2.easeInOut});
+			break; 
 		default:
 			TweenMax.to(settings, 3, {windSpeed: 0.5, ease: Power2.easeOut});
 			break;
@@ -591,9 +647,14 @@ function changeWeather(weather)
 	
 	switch(weather.type)
 	{
+        case 'clear': //added By me
+            TweenMax.to(sun.node, 4, {x: sizes.card.width / 2, y: sizes.card.height / 2, ease: Power2.easeInOut});
+			
+			break;
+             
 		case 'sun':
 			TweenMax.to(sun.node, 4, {x: sizes.card.width / 2, y: sizes.card.height / 2, ease: Power2.easeInOut});
-			TweenMax.to(sunburst.node, 4, {scale: 1, opacity: 0.8, y: (sizes.card.height/2) + (sizes.card.offset.top), ease: Power2.easeInOut});
+			TweenMax.to(sunburst.node, 4, {scale: 1, opacity: 0.8, y: (sizes.card.height/2) + (sizes.card.offset.top)-50, ease: Power2.easeInOut});
 			break;
 		default:
 			TweenMax.to(sun.node, 2, {x: sizes.card.width / 2, y: -100, leafCount: 0, ease: Power2.easeInOut});

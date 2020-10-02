@@ -1,3 +1,4 @@
+/*// This File Copied from https://codepen.io/ste-vg/pen/Gqakbo*/
 @import 'https://fonts.googleapis.com/css?family=Lato:300';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css';
 html, body, .background {
@@ -24,14 +25,14 @@ body {
 
 .container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: auto;
+  overflow: scroll;
   position: relative;
   background: #eee;
   background: linear-gradient(240deg, rgba(150, 50, 50, 0.3), rgba(0, 0, 200, 0));
@@ -92,6 +93,24 @@ nav li a.active {
 #card .details #summary {
   font-weight: 600;
   font-size: 22px;
+}
+#card .details #feelsLike {
+  float: left;
+  font-weight: 300;
+  font-size: 18px;
+  position: relative;
+  margin-top: 250px;
+  left: -50px;
+}
+#card .details #city {
+  float: right;
+  font-weight: 300;
+  font-size: 18px;
+  position: relative;
+  margin-top: -22px;
+  right: 15px;
+  text-align: right;
+  width: 50%;
 }
 #card .details .temp {
   font-size: 60px;
